@@ -13,8 +13,8 @@ from collections import Counter, defaultdict
 
 from transformers import GPT2Tokenizer, AutoTokenizer
 
-from MultiICL.data import MultiICLData
-from MultiICL.model import MultiICLModel
+from MultiAICL.data import MultiAICLData
+from MultiAICL.model import MultiAICLModel
 from utils.data import load_data
 
 from torch.utils.checkpoint import checkpoint
@@ -50,12 +50,12 @@ def main(logger, args):
         assert os.path.exists(args.init_checkpoint)
 
     ######### load tensorize data
-    multiICL_data = MultiICLData(logger, tokenizer, args.method, args.use_demonstrations,
+    multiAICL_data = MultiAICLData(logger, tokenizer, args.method, args.use_demonstrations,
                                args.test_k, max_length, max_length_per_example,
                                do_tensorize=args.do_tensorize,
                                tensorize_dir=args.tensorize_dir,
                                n_process=args.n_process, n_gpu=args.n_gpu, local_rank=args.local_rank)
-    multiICL_data.tensorize_for_training(train_data, keyword=args.task, seed=args.seed,
+    multiAICL_data.tensorize_for_training(train_data, keyword=args.task, seed=args.seed,
                                         use_random_english_words=args.use_random_english_words)
 
     if args.do_tensorize:
@@ -74,23 +74,23 @@ def main(logger, args):
     log_period = 10
 
     if args.no_masking:
-        multiICL_data.tensorized_inputs["token_type_ids"] = torch.ones_like(multiICL_data.tensorized_inputs["input_ids"])
-    multiICL_data.print_tensorized_example()
+        multiAICL_data.tensorized_inputs["token_type_ids"] = torch.ones_like(multiAICL_data.tensorized_inputs["input_ids"])
+    multiAICL_data.print_tensorized_example()
 
     logger.info(args.out_dir)
 
     if args.local_rank<=0 and not os.path.exists(args.out_dir):
         os.makedirs(args.out_dir)
 
-    multiicl_model = MultiICLModel(logger, args.out_dir, args.fp16, args.local_rank)
-    multiicl_model.load(args.init_checkpoint, args.gpt2)
+    multiaicl_model = MultiAICLModel(logger, args.out_dir, args.fp16, args.local_rank)
+    multiaicl_model.load(args.init_checkpoint, args.gpt2)
 
-    multiicl_model.to_device()
-    multiicl_model.setup_optimizer(args.optimization, num_training_steps, args.lr,
+    multiaicl_model.to_device()
+    multiaicl_model.setup_optimizer(args.optimization, num_training_steps, args.lr,
                                   args.weight_decay, args.warmup_steps)
-    multiicl_model.parallel()
-    multiicl_model.train()
-    multiicl_model.do_train(multiICL_data, args.batch_size, num_training_steps, save_period, log_period)
+    multiaicl_model.parallel()
+    multiaicl_model.train()
+    multiaicl_model.do_train(multiAICL_data, args.batch_size, num_training_steps, save_period, log_period)
 
 if __name__=='__main__':
 
