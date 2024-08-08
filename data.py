@@ -19,7 +19,7 @@ from multiprocessing import Pool
 
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler, SequentialSampler
 
-class MultiICLData(object):
+class MultiAICLData(object):
 
     def __init__(self, logger=None, tokenizer=None, method="channel", use_demonstrations=True, k=16,
                  max_length=1024, max_length_per_example=256,
@@ -52,7 +52,7 @@ class MultiICLData(object):
         return len(self.tensorized_inputs["input_ids"])
 
     def __str__(self):
-        text = "[MultiICL Data]: method=%d, "
+        text = "[MultiAICL Data]: method=%d, "
         if self.use_demonstrations:
             text += "%d demonstrations\n" % self.k
         else:
