@@ -272,7 +272,7 @@ def main():
     tokenizer_name = args.tokenizer if args.tokenizer else model_name
 
 
-    model_name="MultiICLmodel.pt"
+    model_name="MultiAICLmodel.pt"
     config_path = "config.json"
     tokenizer_name = 'gpt2-xl'
 
