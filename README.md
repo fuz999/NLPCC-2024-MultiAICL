@@ -1,0 +1,1 @@
+The training and testing datasets for the corpus can refer to the official datasets of six TST tasks, and we will also make the corresponding corpora public in the future.
