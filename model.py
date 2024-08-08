@@ -13,13 +13,13 @@ from transformers import AutoModelForCausalLM
 
 from torch.utils.checkpoint import checkpoint
 
-class MultiICLModel(object):
+class MultiAICLModel(object):
 
     def __init__(self, logger=None, out_dir=None, fp16=True, local_rank=-1):
         if logger is None:
             class Logger():
                 def info(self, text):
-                    print ("Logging from MultiICLModel:\t", text)
+                    print ("Logging from MultiAICLModel:\t", text)
             logger = Logger()
 
         self.logger = logger
@@ -51,7 +51,7 @@ class MultiICLModel(object):
         self.mode = None
 
     def __str__(self):
-        text = "[MultiICL Model]: "
+        text = "[MultiAICL Model]: "
         if self.model_name is None:
             text += "No model loaded yet"
         else:
